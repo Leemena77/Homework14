@@ -1,13 +1,17 @@
 package org.skypro.skyshop;
+
+import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.basket.ProductBasket;
 public class App {
     public static void main(String[] args) {
-        ProductBasket.Product apple = new ProductBasket.Product("Яблоко", 50);
-        ProductBasket.Product bread = new ProductBasket.Product();
-        ProductBasket.Product milk = new ProductBasket.Product("Молоко", 80);
-        ProductBasket.Product cheese = new ProductBasket.Product("Сыр", 150);
-        ProductBasket.Product meat = new ProductBasket.Product("Мясо", 300);
-        ProductBasket.Product fish = new ProductBasket.Product("Рыба", 250);
-        ProductBasket.Product juice = new ProductBasket.Product("Сок", 100);
+        // Создаем продукты
+        Product apple = new Product("Яблоко", 50);
+        Product bread = new Product("Хлеб", 30);
+        Product milk = new Product("Молоко", 80);
+        Product cheese = new Product("Сыр", 150);
+        Product meat = new Product("Мясо", 300);
+        Product fish = new Product("Рыба", 250);
+        Product juice = new Product("Сок", 100);
         ProductBasket basket = new ProductBasket();
         System.out.println("СЦЕНАРИЙ РАБОТЫ КОРЗИНЫ");
 
@@ -61,8 +65,9 @@ public class App {
         System.out.println("   Результат поиска 'Хлеб': " + basket.containsProduct("Хлеб"));
         System.out.println();
 
-        System.out.println("КОНЕЦ СЦЕНАРИЯ ");
-        System.out.println("\n\n=== ДОПОЛНИТЕЛЬНО: Демонстрация нескольких корзин ===\n");
+        System.out.println("КОНЕЦ СЦЕНАРИЯ");
+
+        System.out.println("ДОПОЛНИТЕЛЬНО: Демонстрация нескольких корзин");
 
         ProductBasket basket1 = new ProductBasket();
         ProductBasket basket2 = new ProductBasket();
@@ -72,7 +77,7 @@ public class App {
         basket1.addProduct(juice);
         basket1.printBasket();
 
-        System.out.println("\nКорзина 2:");
+        System.out.println("Корзина 2:");
         basket2.addProduct(fish);
         basket2.addProduct(meat);
         basket2.addProduct(cheese);

@@ -1,4 +1,5 @@
-package org.skypro.skyshop;
+package org.skypro.skyshop.basket;
+import org.skypro.skyshop.product.Product;
 public class ProductBasket {
     private static final int MAX_CAPACITY = 5;
     private final Product[] products;
@@ -25,6 +26,7 @@ public class ProductBasket {
         }
         return total;
     }
+
     public void printBasket() {
         if (size == 0) {
             System.out.println("в корзине пусто");
@@ -40,7 +42,7 @@ public class ProductBasket {
     }
     public boolean containsProduct(String productName) {
         for (int i = 0; i < size; i++) {
-            if (products[i] != null && products[i].getName()) {
+            if (products[i] != null && products[i].getName().equals(productName)) {
                 return true;
             }
         }
@@ -51,19 +53,5 @@ public class ProductBasket {
             products[i] = null;
         }
         size = 0;
-    }
-    static class Product {
-        public Product(String мясо, int i) {
-        }
-
-        public Product() {
-        }
-
-        public int getPrice() {
-            return 0;
-        }
-        public boolean getName() {
-            return false;
-        }
     }
 }
