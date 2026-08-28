@@ -1,86 +1,55 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.SimpleProduct;
+
 public class App {
     public static void main(String[] args) {
-        // Создаем продукты
-        Product apple = new Product("Яблоко", 50);
-        Product bread = new Product("Хлеб", 30);
-        Product milk = new Product("Молоко", 80);
-        Product cheese = new Product("Сыр", 150);
-        Product meat = new Product("Мясо", 300);
-        Product fish = new Product("Рыба", 250);
-        Product juice = new Product("Сок", 100);
+
         ProductBasket basket = new ProductBasket();
-        System.out.println("СЦЕНАРИЙ РАБОТЫ КОРЗИНЫ");
 
-        System.out.println("1. Добавление продуктов в корзину:");
-        basket.addProduct(apple);
-        System.out.println("   + Добавлен: Яблоко (50)");
-        basket.addProduct(bread);
-        System.out.println("   + Добавлен: Хлеб (30)");
-        basket.addProduct(milk);
-        System.out.println("   + Добавлен: Молоко (80)");
-        basket.addProduct(cheese);
-        System.out.println("   + Добавлен: Сыр (150)");
-        basket.addProduct(meat);
-        System.out.println("   + Добавлен: Мясо (300)");
-        System.out.println();
+        basket.addProduct(new SimpleProduct("Книга", "Интересная книга"));
+        basket.addProduct(new SimpleProduct("Тетрадь", "48 листов"));
+        basket.addProduct(new SimpleProduct("Карандаш", "Простой"));
 
-        System.out.println("2. Попытка добавить продукт в заполненную корзину:");
-        basket.addProduct(fish);
-        System.out.println();
+        basket.addProduct(new DiscountedProduct("Детектив", "Классика", 500, 10));
+        basket.addProduct(new DiscountedProduct("Ноутбук", "Игровой", 1000, 20));
+        basket.addProduct(new DiscountedProduct("Фен", "Стайлер", 3000, 15));
+        basket.addProduct(new DiscountedProduct("Кроссовки", "Спортивные", 2500, 30));
 
-        System.out.println("3. Печать содержимого корзины:");
+        basket.addProduct(new FixPriceProduct("Набор ручек", "10 цветных ручек"));
+        basket.addProduct(new FixPriceProduct("Блокнот", "А5, 50 листов"));
+        basket.addProduct(new FixPriceProduct("Календарь", "Настенный"));
+        basket.addProduct(new FixPriceProduct("Магнит", "Сувенирный"));
+
+        System.out.println("СОДЕРЖИМОЕ КОРЗИНЫ");
         basket.printBasket();
-        System.out.println();
 
-        System.out.println("4. Получение стоимости корзины:");
-        System.out.println("   Общая стоимость: " + basket.getTotalPrice());
-        System.out.println();
+        System.out.println("ДЕТАЛЬНАЯ ИНФОРМАЦИЯ");
 
-        System.out.println("5. Поиск товара, который есть в корзине:");
-        System.out.println("   Результат поиска 'Хлеб': " + basket.containsProduct("Хлеб"));
-        System.out.println();
+        int itemNumber = 1;
+        for (Product product : basket.addProduct()) {
+            System.out.println("Товар #" + itemNumber++);
+            System.out.println("  Название: " + product.getName());
+            System.out.println("  Описание: " + product.getDescription());
+            System.out.println("  Цена: " + product.getPrice());
+            System.out.println("  Специальный: " + (product.isSpecial() ? "Да" : "Нет"));
+            System.out.println("  Строка вывода: " + product.toString());
+            System.out.println();
+        }
+        System.out.println("ПРОВЕРКА МЕТОДОВ");
+        testSpecialMethod();
+    }
+    private static void testSpecialMethod() {
+        Product simple = new SimpleProduct("Тестовый", "Обычный");
+        Product discounted = new DiscountedProduct("Тестовый", "Со скидкой", 100, 10);
+        Product fixPrice = new FixPriceProduct("Тестовый", "Фиксированная цена");
 
-        System.out.println("6. Поиск товара, которого нет в корзине:");
-        System.out.println("   Результат поиска 'Рыба': " + basket.containsProduct("Рыба"));
-        System.out.println();
-
-        System.out.println("7. Очистка корзины:");
-        basket.clearBasket();
-        System.out.println("   Корзина очищена");
-        System.out.println();
-
-        System.out.println("8. Печать содержимого пустой корзины:");
-        basket.printBasket();
-        System.out.println();
-
-        System.out.println("9. Получение стоимости пустой корзины:");
-        System.out.println("   Общая стоимость: " + basket.getTotalPrice());
-        System.out.println();
-
-        System.out.println("10. Поиск товара по имени в пустой корзине:");
-        System.out.println("   Результат поиска 'Хлеб': " + basket.containsProduct("Хлеб"));
-        System.out.println();
-
-        System.out.println("КОНЕЦ СЦЕНАРИЯ");
-
-        System.out.println("ДОПОЛНИТЕЛЬНО: Демонстрация нескольких корзин");
-
-        ProductBasket basket1 = new ProductBasket();
-        ProductBasket basket2 = new ProductBasket();
-
-        System.out.println("Корзина 1:");
-        basket1.addProduct(apple);
-        basket1.addProduct(juice);
-        basket1.printBasket();
-
-        System.out.println("Корзина 2:");
-        basket2.addProduct(fish);
-        basket2.addProduct(meat);
-        basket2.addProduct(cheese);
-        basket2.printBasket();
+        System.out.println("SimpleProduct isSpecial: " + simple.isSpecial() + " (должен быть false)");
+        System.out.println("DiscountedProduct isSpecial: " + discounted.isSpecial() + " (должен быть true)");
+        System.out.println("FixPriceProduct isSpecial: " + fixPrice.isSpecial() + " (должен быть true)");
     }
 }
