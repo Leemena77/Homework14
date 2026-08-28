@@ -1,9 +1,9 @@
 package org.skypro.skyshop.product;
-public abstract class FixPriceProduct extends Product {
+public class FixPriceProduct extends Product {
     private static final double FIXED_PRICE = 199.99;
 
     public FixPriceProduct(String name, String description) {
-        super(name, Integer.parseInt(description));
+        super(name, description);
     }
 
     @Override

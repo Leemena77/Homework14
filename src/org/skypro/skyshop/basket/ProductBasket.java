@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductBasket {
     private List<Product> products;
@@ -14,6 +16,10 @@ public class ProductBasket {
 
     public void addProduct(Product product) {
         products.add(product);
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
     public void printBasket() {
@@ -27,6 +33,7 @@ public class ProductBasket {
                 specialCount++;
             }
         }
+
         System.out.println("Итого: " + total);
         System.out.println("Специальных товаров: " + specialCount);
     }
