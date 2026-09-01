@@ -3,13 +3,13 @@ public class SimpleProduct extends Product {
     private double price;
 
     public SimpleProduct(String name, String description, double price) {
-        super(name, description);
+        super(name, Integer.parseInt(description));
         this.price = price;
     }
 
     @Override
-    public double getPrice() {
-        return price;
+    public int getPrice() {
+        return (int) price;
     }
 
     @Override

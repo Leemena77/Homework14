@@ -4,14 +4,14 @@ public class DiscountedProduct extends Product {
     private int discountPercent;
 
     public DiscountedProduct(String name, String description, double basePrice, int discountPercent) {
-        super(name, description);
+        super(name, Integer.parseInt(description));
         this.basePrice = basePrice;
         this.discountPercent = Math.max(0, Math.min(100, discountPercent));
     }
 
     @Override
-    public double getPrice() {
-        return basePrice * (100 - discountPercent) / 100.0;
+    public int getPrice() {
+        return (int) (basePrice * (100 - discountPercent) / 100.0);
     }
 
     @Override
