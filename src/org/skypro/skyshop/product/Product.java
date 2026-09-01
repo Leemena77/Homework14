@@ -1,22 +1,34 @@
 package org.skypro.skyshop.product;
-public class Product {
+
+import org.skypro.skyshop.search.Searchable;
+
+public abstract class Product implements Searchable {
     private final String name;
-    private final int price;
-    public Product(String name, int price) {
+
+    public Product(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Название продукта не может быть null или пустым");
+        }
         this.name = name;
-        this.price = price;
     }
     public String getName() {
         return name;
     }
-    public int getPrice() {
-        return price;
-    }
+
+    public abstract int getPrice();
+
     @Override
     public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        return name + ": " + getPrice();
+    }
+
+    @Override
+    public String getSearchTerm() {
+        return name;
+    }
+
+    @Override
+    public String getContentType() {
+        return "PRODUCT";
     }
 }
