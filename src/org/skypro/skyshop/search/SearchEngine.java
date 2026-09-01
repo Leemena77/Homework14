@@ -8,6 +8,7 @@ public class SearchEngine {
         this.items = new Searchable[capacity];
         this.size = 0;
     }
+
     public void add(Searchable item) {
         if (size < items.length) {
             items[size] = item;
@@ -32,6 +33,55 @@ public class SearchEngine {
         }
 
         return results;
+    }
+
+    public Searchable findMostSuitable(String search) throws BestResultNotFound {
+        if (search == null || search.isEmpty()) {
+            throw new BestResultNotFound(search);
+        }
+
+        Searchable mostSuitable = null;
+        int maxCount = 0;
+        String searchLower = search.toLowerCase();
+
+        for (int i = 0; i < size; i++) {
+            if (items[i] != null) {
+                String searchTerm = items[i].getSearchTerm();
+                if (searchTerm != null) {
+                    String termLower = searchTerm.toLowerCase();
+                    int count = countOccurrences(termLower, searchLower);
+
+                    if (count > maxCount) {
+                        maxCount = count;
+                        mostSuitable = items[i];
+                    }
+                }
+            }
+        }
+
+        if (mostSuitable == null || maxCount == 0) {
+            throw new BestResultNotFound(search);
+        }
+
+        return mostSuitable;
+    }
+
+    private int countOccurrences(String text, String substring) {
+        if (substring == null || substring.isEmpty() || text == null || text.isEmpty()) {
+            return 0;
+        }
+
+        int count = 0;
+        int index = 0;
+        int substringIndex = text.indexOf(substring, index);
+
+        while (substringIndex != -1) {
+            count++;
+            index = substringIndex + substring.length();
+            substringIndex = text.indexOf(substring, index);
+        }
+
+        return count;
     }
 
     public int getSize() {

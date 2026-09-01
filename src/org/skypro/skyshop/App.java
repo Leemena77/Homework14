@@ -1,63 +1,101 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.search.Searchable;
 import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.BestResultNotFound;
 
 public class App {
     public static void main(String[] args) {
-        SearchEngine searchEngine = new SearchEngine(10);
+        System.out.println("1. ДЕМОНСТРАЦИЯ ОБРАБОТКИ НЕВАЛИДНЫХ ДАННЫХ ");
 
-        var apple = new Product("Яблоко", 50) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var bread = new Product("Хлеб", 30) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var milk = new Product("Молоко", 80) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var cheese = new Product("Сыр", 150) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var meat = new Product("Мясо", 300) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var fish = new Product("Рыба", 250) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var juice = new Product("Сок", 100) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
-        var chocolate = new Product("Шоколад", 120) {
-            @Override
-            public boolean isSpecial() {
-                return false;
-            }
-        };
+        System.out.println(" 1.1 Тестирование SimpleProduct ");
+        try {
+            SimpleProduct invalidName = new SimpleProduct("", 50);
+            System.out.println("Создан продукт: " + invalidName);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            SimpleProduct nullName = new SimpleProduct(null, 50);
+            System.out.println("Создан продукт: " + nullName);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            SimpleProduct zeroPrice = new SimpleProduct("Товар", 0);
+            System.out.println("Создан продукт: " + zeroPrice);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            SimpleProduct negativePrice = new SimpleProduct("Товар", -10);
+            System.out.println("Создан продукт: " + negativePrice);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+
+        System.out.println(" 1.2 Тестирование DiscountedProduct ");
+
+        try {
+            DiscountedProduct zeroBasePrice = new DiscountedProduct("Сыр", 0, 20);
+            System.out.println("Создан продукт: " + zeroBasePrice);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            DiscountedProduct negativeBasePrice = new DiscountedProduct("Сыр", -50, 20);
+            System.out.println("Создан продукт: " + negativeBasePrice);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            DiscountedProduct negativeDiscount = new DiscountedProduct("Сыр", 150, -10);
+            System.out.println("Создан продукт: " + negativeDiscount);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+        try {
+            DiscountedProduct tooHighDiscount = new DiscountedProduct("Сыр", 150, 150);
+            System.out.println("Создан продукт: " + tooHighDiscount);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+
+        System.out.println(" 1.3 Тестирование FixPriceProduct ");
+
+        try {
+            FixPriceProduct emptyName = new FixPriceProduct("");
+            System.out.println("Создан продукт: " + emptyName);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+
+        try {
+            FixPriceProduct nullName = new FixPriceProduct(null);
+            System.out.println("Создан продукт: " + nullName);
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Ошибка: " + e.getMessage());
+        }
+
+        System.out.println(" 2. СОЗДАНИЕ КОРРЕКТНЫХ ОБЪЕКТОВ ");
+
+        SimpleProduct apple = new SimpleProduct("Яблоко", 50);
+        SimpleProduct bread = new SimpleProduct("Хлеб", 30);
+        DiscountedProduct cheese = new DiscountedProduct("Сыр", 150, 20);
+        DiscountedProduct milk = new DiscountedProduct("Молоко", 80, 10);
+        FixPriceProduct pen = new FixPriceProduct("Ручка");
+        FixPriceProduct notebook = new FixPriceProduct("Тетрадь");
+
+        System.out.println("✓ Созданы корректные продукты:");
+        System.out.println("  " + apple);
+        System.out.println("  " + bread);
+        System.out.println("  " + cheese);
+        System.out.println("  " + milk);
+        System.out.println("  " + pen);
+        System.out.println("  " + notebook);
 
         Article appleArticle = new Article(
                 "Польза яблок",
@@ -66,7 +104,7 @@ public class App {
 
         Article breadArticle = new Article(
                 "Как выбрать хлеб",
-                "При выборе хлеба обращайте внимание на состав. Качественный хлеб должен быть без добавок и консервантов."
+                "При выборе хлеба обращайте внимание на состав. Качественный хлеб должен быть без добавок."
         );
 
         Article milkArticle = new Article(
@@ -74,102 +112,179 @@ public class App {
                 "Молоко содержит кальций, который необходим для здоровья костей и зубов."
         );
 
-        Article meatArticle = new Article(
-                "Как выбрать мясо",
-                "При выборе мяса обращайте внимание на цвет, запах и упругость. Свежее мясо имеет приятный запах."
+        Article healthArticle = new Article(
+                "Здоровое питание",
+                "Правильное питание включает фрукты, овощи, молочные продукты и хлеб из цельного зерна."
         );
 
-        System.out.println("ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ В ПОИСК");
+        System.out.println("✓ Созданы статьи:");
+        System.out.println("  " + appleArticle.getTitle());
+        System.out.println("  " + breadArticle.getTitle());
+        System.out.println("  " + milkArticle.getTitle());
+        System.out.println("  " + healthArticle.getTitle());
+
+        SearchEngine searchEngine = new SearchEngine(20);
 
         searchEngine.add(apple);
-        System.out.println("+ Добавлен: Яблоко (PRODUCT)");
         searchEngine.add(bread);
-        System.out.println("+ Добавлен: Хлеб (PRODUCT)");
-        searchEngine.add(milk);
-        System.out.println("+ Добавлен: Молоко (PRODUCT)");
         searchEngine.add(cheese);
-        System.out.println("+ Добавлен: Сыр (PRODUCT)");
-        searchEngine.add(meat);
-        System.out.println("+ Добавлен: Мясо (PRODUCT)");
-        searchEngine.add(fish);
-        System.out.println("+ Добавлен: Рыба (PRODUCT)");
-        searchEngine.add(juice);
-        System.out.println("+ Добавлен: Сок (PRODUCT)");
-        searchEngine.add(chocolate);
-        System.out.println("+ Добавлен: Шоколад (PRODUCT)");
+        searchEngine.add(milk);
+        searchEngine.add(pen);
+        searchEngine.add(notebook);
         searchEngine.add(appleArticle);
-        System.out.println("+ Добавлена: Польза яблок (ARTICLE)");
         searchEngine.add(breadArticle);
-        System.out.println("+ Добавлена: Как выбрать хлеб (ARTICLE)");
         searchEngine.add(milkArticle);
-        System.out.println("+ Добавлена: Польза молока (ARTICLE)");
-        searchEngine.add(meatArticle);
-        System.out.println("+ Добавлена: Как выбрать мясо (ARTICLE)");
+        searchEngine.add(healthArticle);
 
-        System.out.println("\nВсего элементов в движке: " + searchEngine.getSize());
+        System.out.println("Всего элементов в поисковом движке: " + searchEngine.getSize());
 
-        System.out.println(" ПОИСК ");
+        System.out.println("3. ДЕМОНСТРАЦИЯ МЕТОДА findMostSuitable ");
 
-        String[] queries = {"хлеб", "молоко", "выбор", "польза", "яблоко", "рыба", "овощи"};
+        System.out.println(" 3.1 Поиск существующего объекта ");
 
-        for (String query : queries) {
-            System.out.println("Поиск по запросу: '" + query + "'");
-            Searchable[] results = searchEngine.search(query);
+        String existingQuery = "яблоко";
+        try {
+            System.out.println("Поиск наиболее подходящего для запроса: '" + existingQuery + "'");
+            Searchable result = searchEngine.findMostSuitable(existingQuery);
+            System.out.println("✓ Найден: " + result.getStringRepresentation());
+            System.out.println("  Search term: " + result.getSearchTerm());
 
-            boolean found = false;
-            for (int i = 0; i < results.length; i++) {
-                if (results[i] != null) {
-                    System.out.println("  " + (i + 1) + ". " + results[i].getStringRepresentation());
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                System.out.println("  Ничего не найдено");
-            }
-            System.out.println();
+            String searchTerm = result.getSearchTerm().toLowerCase();
+            int count = countOccurrences(searchTerm, existingQuery.toLowerCase());
+            System.out.println("  Количество вхождений: " + count);
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
         }
 
-        System.out.println(" РАБОТА КОРЗИНЫ ");
+        System.out.println("---");
+
+        String existingQuery2 = "хлеб";
+        try {
+            System.out.println("Поиск наиболее подходящего для запроса: '" + existingQuery2 + "'");
+            Searchable result = searchEngine.findMostSuitable(existingQuery2);
+            System.out.println("✓ Найден: " + result.getStringRepresentation());
+            System.out.println("  Search term: " + result.getSearchTerm());
+
+            String searchTerm = result.getSearchTerm().toLowerCase();
+            int count = countOccurrences(searchTerm, existingQuery2.toLowerCase());
+            System.out.println("  Количество вхождений: " + count);
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
+        }
+
+        System.out.println("3.2 Поиск несуществующего объекта ");
+
+        String nonExistingQuery = "абрикос";
+        try {
+            System.out.println("Поиск наиболее подходящего для запроса: '" + nonExistingQuery + "'");
+            Searchable result = searchEngine.findMostSuitable(nonExistingQuery);
+            System.out.println("Найден: " + result.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
+        }
+
+        System.out.println("---");
+
+        String nonExistingQuery2 = "компьютер";
+        try {
+            System.out.println("Поиск наиболее подходящего для запроса: '" + nonExistingQuery2 + "'");
+            Searchable result = searchEngine.findMostSuitable(nonExistingQuery2);
+            System.out.println("Найден: " + result.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
+        }
+
+        System.out.println("---");
+
+        try {
+            System.out.println("Поиск наиболее подходящего для пустого запроса: ''");
+            Searchable result = searchEngine.findMostSuitable("");
+            System.out.println("Найден: " + result.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
+        }
+
+        System.out.println(" 3.3 Тест с множественными вхождениями ");
+
+        SearchEngine testEngine = new SearchEngine(10);
+
+        Article test1 = new Article(
+                "Яблоко яблоко яблоко",
+                "Текст про яблоки"
+        );
+        Article test2 = new Article(
+                "Яблоко груша",
+                "Текст про фрукты"
+        );
+        Article test3 = new Article(
+                "Груша яблоко яблоко яблоко яблоко",
+                "Много яблок"
+        );
+
+        testEngine.add(test1);
+        testEngine.add(test2);
+        testEngine.add(test3);
+
+        try {
+            System.out.println("Поиск наиболее подходящего для 'яблоко':");
+            Searchable best = testEngine.findMostSuitable("яблоко");
+            System.out.println("✓ Найден: " + best.getStringRepresentation());
+            System.out.println("  Search term: " + best.getSearchTerm());
+            String searchTerm = best.getSearchTerm().toLowerCase();
+            int count = countOccurrences(searchTerm, "яблоко");
+            System.out.println("  Количество вхождений: " + count);
+        } catch (BestResultNotFound e) {
+            System.out.println("✗ " + e.getMessage());
+        }
+
+        System.out.println("4. РАБОТА С КОРЗИНОЙ ");
 
         ProductBasket basket = new ProductBasket();
 
-        System.out.println("1. Добавление продуктов в корзину:");
+        System.out.println("Добавление продуктов в корзину:");
         basket.addProduct(apple);
-        System.out.println("   + Яблоко");
+        System.out.println("  + " + apple);
         basket.addProduct(bread);
-        System.out.println("   + Хлеб");
-        basket.addProduct(milk);
-        System.out.println("   + Молоко");
+        System.out.println("  + " + bread);
         basket.addProduct(cheese);
-        System.out.println("   + Сыр");
-        basket.addProduct(meat);
-        System.out.println("   + Мясо");
+        System.out.println("  + " + cheese);
+        basket.addProduct(milk);
+        System.out.println("  + " + milk);
+        basket.addProduct(pen);
+        System.out.println("  + " + pen);
 
-        System.out.println("\n2. Попытка добавить 6-й продукт:");
-        basket.addProduct(fish);
-
-        System.out.println("\n3. Содержимое корзины:");
+        System.out.println(" Содержимое корзины:");
         basket.printBasket();
 
-        System.out.println("\n4. Общая стоимость: " + basket.getTotalPrice());
+        System.out.println(" Общая стоимость: " + basket.getTotalPrice());
 
-        System.out.println("\n5. Поиск товара 'Хлеб' в корзине:");
-        System.out.println("   Результат: " + basket.containsProduct("Хлеб"));
+        System.out.println(" Поиск товара 'Сыр' в корзине: " + basket.containsProduct("Сыр"));
+        System.out.println(" Поиск товара 'Рыба' в корзине: " + basket.containsProduct("Рыба"));
 
-        System.out.println("\n6. Поиск товара 'Рыба' в корзине:");
-        System.out.println("   Результат: " + basket.containsProduct("Рыба"));
-
-        System.out.println("\n7. Очистка корзины:");
+        System.out.println(" Очистка корзины...");
         basket.clearBasket();
 
-        System.out.println("\n8. Содержимое пустой корзины:");
+        System.out.println(" Содержимое после очистки:");
         basket.printBasket();
 
-        System.out.println("\n9. Стоимость пустой корзины: " + basket.getTotalPrice());
+        System.out.println(" КОНЕЦ ДЕМОНСТРАЦИИ ");
+    }
 
-        System.out.println("\n10. Поиск в пустой корзине:");
-        System.out.println("    Результат поиска 'Хлеб': " + basket.containsProduct("Хлеб"));
+    private static int countOccurrences(String text, String substring) {
+        if (substring == null || substring.isEmpty() || text == null || text.isEmpty()) {
+            return 0;
+        }
 
+        int count = 0;
+        int index = 0;
+        int substringIndex = text.indexOf(substring, index);
+
+        while (substringIndex != -1) {
+            count++;
+            index = substringIndex + substring.length();
+            substringIndex = text.indexOf(substring, index);
+        }
+
+        return count;
     }
 }

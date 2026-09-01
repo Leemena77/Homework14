@@ -26,16 +26,16 @@ public class Article implements Searchable {
 
     @Override
     public String getSearchTerm() {
-        return title + " " + text; // Название + текст статьи
+        return title + " " + text;
     }
 
     @Override
     public String getContentType() {
-        return "ARTICLE"; // Тип контента
+        return "ARTICLE";
     }
 
     @Override
     public String getName() {
-        return title; // Название статьи
+        return title;
     }
 }

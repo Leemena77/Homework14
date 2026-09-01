@@ -1,16 +1,20 @@
 package org.skypro.skyshop.product;
 
-import org.skypro.skyshop.search.Searchable;
-
-public abstract class FixPriceProduct extends Product {
-    private static final int FIX_PRICE = 100; // Фиксированная цена
+public class FixPriceProduct extends Product {
+    private static final int FIX_PRICE = 100;
 
     public FixPriceProduct(String name) {
-        super(name, FIX_PRICE);
+        super(name);
+    }
+
+    @Override
+    public int getPrice() {
+        return FIX_PRICE;
     }
 
     @Override
     public String toString() {
-        return getName() + ": " + getPrice() + " (Фиксированная цена)";
+        String s = getName() + ": " + getPrice() + " (Фиксированная цена)";
+        return s;
     }
 }
