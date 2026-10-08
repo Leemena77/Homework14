@@ -2,29 +2,33 @@ package org.skypro.skyshop.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
-    private List<String> documents;
+    private List<Searchable> searchables;
 
     public SearchEngine() {
-        this.documents = new ArrayList<>();
+        this.searchables = new ArrayList<>();
     }
 
-    public void addDocument(String document) {
-        documents.add(document);
+    public void add(Searchable searchable) {
+        searchables.add(searchable);
     }
 
-    public List<String> search(String query) {
-        List<String> results = new ArrayList<>();
-        for (String document : documents) {
-            if (document.contains(query)) {
-                results.add(document);
+    public Map<String, Searchable> search(String query) {
+        Map<String, Searchable> results = new TreeMap<>();
+
+        for (Searchable searchable : searchables) {
+            if (searchable.getSearchTerm().contains(query)) {
+                results.put(searchable.getName(), searchable);
             }
         }
+
         return results;
     }
 
-    public List<String> getDocuments() {
-        return documents;
+    public List<Searchable> getSearchables() {
+        return searchables;
     }
 }
