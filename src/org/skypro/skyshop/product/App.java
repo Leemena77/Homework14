@@ -1,5 +1,6 @@
 package org.skypro.skyshop.product;
 
+import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
@@ -9,7 +10,7 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) {
@@ -37,9 +38,8 @@ public class App {
         System.out.println(" Исходная корзина ");
         basket.printBasket();
 
-        System.out.println("\n  Удаляем все товары с именем 'Блокнот' ");
+        System.out.println("\n Удаляем все товары с именем 'Блокнот' ");
         List<Product> removed = basket.removeProductsByName("Блокнот");
-
         if (!removed.isEmpty()) {
             System.out.println("Удалено товаров: " + removed.size());
             for (Product p : removed) {
@@ -54,13 +54,7 @@ public class App {
 
         System.out.println("\n Удаляем 'НесуществующийТовар' ");
         List<Product> nothing = basket.removeProductsByName("НесуществующийТовар");
-
-        if (!nothing.isEmpty()) {
-            System.out.println("Удалено товаров: " + nothing.size());
-            for (Product p : nothing) {
-                System.out.println("  • " + p);
-            }
-        } else {
+        if (nothing.isEmpty()) {
             System.out.println("Список пуст");
         }
 
@@ -69,56 +63,40 @@ public class App {
 
         SearchEngine engine = new SearchEngine();
 
-        System.out.println("Всего документов в движке: " + engine.getSearchables().size());
+        engine.add(new SimpleProduct("Java Book", 500));
+        engine.add(new DiscountedProduct("Java Course", 1000, 20));
+        engine.add(new FixPriceProduct("Java Sticker"));
+        engine.add(new SimpleProduct("Java", 100)); // короткое имя
+        engine.add(new SimpleProduct("Java Programming Language", 1500)); // длинное
+
+        engine.add(new SimpleProduct("Java Book", 999)); // дубликат по имени
+
+        System.out.println("Всего объектов в движке (без дубликатов): "
+                + engine.getSearchables().size());
 
         String query = "Java";
-        System.out.println(" Поиск по запросу: \"" + query + "\" ");
-        Map<String, Searchable> results = engine.search(query);
+        System.out.println("\n Поиск по запросу: \"" + query + "\" ");
+        Set<Searchable> results = engine.search(query);
 
         if (!results.isEmpty()) {
             System.out.println("Найдено результатов: " + results.size());
+            System.out.println("(сортировка: от длинного имени к короткому, "
+                    + "при равенстве — по алфавиту)\n");
             int i = 1;
-            for (Searchable s : results.values()) {
-                System.out.println("  " + i++ + ". " + s.getSearchTerm());
+            for (Searchable s : results) {
+                System.out.println("  " + i++ + ". [" + s.getName().length() + " симв.] "
+                        + s.getName());
             }
         } else {
             System.out.println("Список пуст");
         }
 
         String emptyQuery = "C++";
-        System.out.println(" Поиск по запросу: \"" + emptyQuery + "\" ");
-        Map<String, Searchable> emptyResults = engine.search(emptyQuery);
+        System.out.println("\n Поиск по запросу: \"" + emptyQuery + "\" ");
+        Set<Searchable> emptyResults = engine.search(emptyQuery);
 
-        if (!emptyResults.isEmpty()) {
-            System.out.println("Найдено результатов: " + emptyResults.size());
-            for (Searchable s : emptyResults.values()) {
-                System.out.println("  • " + s.getSearchTerm());
-            }
-        } else {
+        if (emptyResults.isEmpty()) {
             System.out.println("Список пуст");
-        }
-    }
-
-    static class SimpleSearchable implements Searchable {
-        private final String content;
-
-        SimpleSearchable(String content) {
-            this.content = content;
-        }
-
-        @Override
-        public String getSearchTerm() {
-            return content;
-        }
-
-        @Override
-        public String getContentType() {
-            return "DOCUMENT";
-        }
-
-        @Override
-        public String getName() {
-            return content;
         }
     }
 }
